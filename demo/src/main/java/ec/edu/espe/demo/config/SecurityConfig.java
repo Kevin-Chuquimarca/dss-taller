@@ -27,23 +27,17 @@ public class SecurityConfig {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    // User Creation
-
-
-    // Configuring HttpSecurity
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/welcome", "/auth/addNewUser", "/auth/generateToken").permitAll())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/user/**").authenticated())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/admin/**").authenticated())
+                .authorizeHttpRequests(request -> request.requestMatchers("/v1/auth/welcome", "/v1/auth/addNewUser", "/v1/auth/generateToken").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/v1/auth/user/**").authenticated())
+                .authorizeHttpRequests(request -> request.requestMatchers("/v1/auth/admin/**").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
-    // Password Encoding
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
